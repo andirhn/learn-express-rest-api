@@ -36,6 +36,13 @@ router.post('/', async (req, res) => {
     try {
         const newProductData = req.body
 
+        if (!(newProductData.name && newProductData.description && newProductData.price && newProductData.image)) {
+            return res.status(400).send({
+                status: res.statusCode,
+                message: error.message
+            })
+        }
+
         const product = await createProduct(newProductData)
 
         res.send({
@@ -45,7 +52,7 @@ router.post('/', async (req, res) => {
     } catch (error) {
         res.status(400).send({
             statusCode: res.statusCode,
-            message: error.message 
+            message: error.message
         })
     }
 })
@@ -57,9 +64,15 @@ router.delete('/:id', async (req, res) => {
 
         await deleteProductById(parseInt(productId))
 
-        res.send("delete product success")
+        res.status(200).send({
+            statusCode: res.statusCode,
+            message: "product success deleted"
+        })
     } catch (error) {
-        res.status(404).send(error.message)
+        res.status(404).send({
+            statusCode: res.statusCode,
+            message: error.message
+        })
     }
 })
 
